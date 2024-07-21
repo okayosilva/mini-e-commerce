@@ -1,5 +1,6 @@
 import { useCart } from "@/data/hooks/useCart";
 import { ItemCart } from "@/data/model/itemCart";
+import { formatNumber } from "@/data/utils/formatNumber";
 import { IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
 import Image from "next/image";
 
@@ -8,15 +9,15 @@ type CartItemProps = {
 };
 
 export function CartItem({ item }: CartItemProps) {
-  const { handleAddItem, handleRemoveItem } = useCart();
+  const { handleAddItem, handleRemoveItem, handleDeleteItem } = useCart();
   const { produto, quantidade } = item;
   const { id, nome, preco, imagemUrl, descricao } = produto;
 
   return (
     <div className="rounded-md border border-neutral-700 bg-neutral-950 px-6 py-4">
-      <div className="flex flex-wrap justify-between">
+      <div className="flex flex-wrap justify-between max-md:flex-col">
         <div className="flex flex-wrap gap-4">
-          <div className="min-h-24 relative max-h-24 w-32 overflow-hidden rounded-sm">
+          <div className="relative max-h-24 min-h-24 w-32 overflow-hidden rounded-sm max-md:w-full">
             <Image src={imagemUrl} fill alt={nome} className="object-cover" />
           </div>
           <div className="">
@@ -26,13 +27,19 @@ export function CartItem({ item }: CartItemProps) {
             </span>
             <div className="mt-2">
               <span className="text-lg font-semibold text-neutral-200">
-                R$ {preco.toFixed(2)}
+                {formatNumber(preco)}
               </span>
               <span className="text-sm text-neutral-400"> x {quantidade}</span>
+              {quantidade > 1 && (
+                <span className="text-lg font-semibold text-amber-400">
+                  {" "}
+                  {formatNumber(preco * quantidade)}
+                </span>
+              )}
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center">
+        <div className="flex w-36 items-center justify-center">
           <div className="flex flex-1 flex-wrap justify-between">
             {quantidade >= 2 ? (
               <button
@@ -44,7 +51,7 @@ export function CartItem({ item }: CartItemProps) {
             ) : (
               <button
                 className="w-11 rounded-l-sm bg-neutral-700 text-neutral-200 transition-colors hover:text-red-500"
-                onClick={() => handleRemoveItem(produto)}
+                onClick={() => handleDeleteItem(produto)}
               >
                 <IconTrash size={20} className="m-auto" />
               </button>

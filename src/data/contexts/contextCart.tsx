@@ -8,6 +8,7 @@ type ContextCartProps = {
   quantityItems: number;
   handleAddItem: (item: Product) => void;
   handleRemoveItem: (item: Product) => void;
+  handleDeleteItem: (item: Product) => void;
 };
 
 const ContextCart = createContext<ContextCartProps>({} as any);
@@ -37,12 +38,17 @@ export function ProviderCart({ children }: any) {
     }
   }
 
+  function handleDeleteItem(product: Product) {
+    const newList = itens.filter((item) => item.produto.id !== product.id);
+    setItens(newList);
+  }
   return (
     <ContextCart.Provider
       value={{
         itens,
         handleAddItem,
         handleRemoveItem,
+        handleDeleteItem,
         get quantityItems() {
           return itens.reduce((acc, item) => acc + item.quantidade, 0);
         },

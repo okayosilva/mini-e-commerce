@@ -1,6 +1,7 @@
 "use client";
 import { useCart } from "@/data/hooks/useCart";
 import { Product } from "@/data/model/product";
+import { formatNumber } from "@/data/utils/formatNumber";
 import Image from "next/image";
 
 export type CardProductProps = {
@@ -19,7 +20,7 @@ export function CardProduct({ product }: CardProductProps) {
         <h3 className="text-lg font-semibold text-zinc-50">{nome}</h3>
         <p className="flex-1 text-sm text-gray-400">{descricao}</p>
         <div className="flex h-8 items-center justify-between">
-          <p className="text-lg font-semibold">R$ {preco.toFixed(2)}</p>
+          <p className="text-lg font-semibold">R$ {formatNumber(preco)}</p>
           <button
             className="rounded-md border border-neutral-600 px-2 py-1 text-sm font-semibold text-neutral-100 transition-colors hover:bg-neutral-700"
             onClick={() => handleAddItem(product)}
