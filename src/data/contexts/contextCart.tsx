@@ -7,6 +7,7 @@ type ContextCartProps = {
   itens: ItemCart[];
   quantityItems: number;
   handleAddItem: (item: Product) => void;
+  handleRemoveItem: (item: Product) => void;
 };
 
 const ContextCart = createContext<ContextCartProps>({} as any);
@@ -16,7 +17,7 @@ export function ProviderCart({ children }: any) {
 
   function handleAddItem(product: Product) {
     const indice = itens.findIndex((i) => i.produto.id === product.id);
-    
+
     if (indice === -1) {
       setItens([...itens, { produto: product, quantidade: 1 }]);
     } else {
@@ -26,11 +27,22 @@ export function ProviderCart({ children }: any) {
     }
   }
 
+  function handleRemoveItem(product: Product) {
+    const indice = itens.findIndex((i) => i.produto.id === product.id);
+
+    const newItens = [...itens];
+    if (newItens[indice].quantidade > 1) {
+      newItens[indice].quantidade -= 1;
+      setItens(newItens);
+    }
+  }
+
   return (
     <ContextCart.Provider
       value={{
         itens,
         handleAddItem,
+        handleRemoveItem,
         get quantityItems() {
           return itens.reduce((acc, item) => acc + item.quantidade, 0);
         },
